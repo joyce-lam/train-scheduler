@@ -23,7 +23,7 @@ $("#submit").on("click", function(event) {
   trainName = $("#name-input").val().trim();
   trainDestination = $("#destination-input").val().trim();
   trainTime = $("#time-input").val().trim();
-  trainFreq = $("freq-input").val().trim();
+  trainFreq = $("#freq-input").val().trim();
 
   console.log(trainFreq);
 
@@ -35,3 +35,28 @@ $("#submit").on("click", function(event) {
     dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
 });
+
+database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added",
+  function(snapshot) {
+    var snapValue = snapshot.val();
+
+ //  $(".schedule-view").empty();
+
+    var trainRowName = $("<td>").text(snapValue.trainName);
+    var trainRowDestination = $("<td>").text(snapValue.trainDestination);
+    var trainRowFreq = $("<td>").text(snapValue.trainFreq);
+    // var trainRowArrival = $("<td>").text(sv.);
+    // var trainRowMinute = $("<td>").text();
+
+    $(".schedule-view").append(trainRowName, trainRowDestination, trainRowFreq);
+
+  })
+
+
+
+
+
+
+
+
+
