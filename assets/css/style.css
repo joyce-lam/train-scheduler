@@ -1,0 +1,31 @@
+body {
+	background-image: url(../images/trainlogo.png);
+	background-repeat: no-repeat;
+	background-size: 50%;
+	background-attachment: fixed;
+	background-position: center;
+	opacity: 0.95;
+}
+
+.title {
+	text-align: center;
+	background-color: #BCEFE2;
+}
+
+#schedule {
+	background-color: #7C95E6;
+}
+
+.input-group {
+	width: 100%;
+	height: 20px;
+}
+
+#body,
+.table {
+	background-color: #E0EBEB;
+}
+
+#add-train {
+	background-color: #5F4BC0;
+}

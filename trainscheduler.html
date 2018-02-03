@@ -25,18 +25,18 @@
             <div class="col-md-12">
                 <div class="jumbotron title">
                     <h1>Train Schedule</h1>
-                    <p>xyz</p>
+                    <p>Enter train information to track them</p>
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
+                <div class="panel">
+                    <div class="panel-heading"  id="schedule">
                         <h3 class="panel-title">Current Train Schedule</h3>
                     </div>
-                    <div class="panel-body"></div>
+                    <div class="panel-body" id="body"></div>
                     <table class="table">
                         <tr>
                             <th>Train Name</th>
@@ -45,7 +45,6 @@
                             <th>Next Arrival</th>
                             <th>Minutes Away</th>
                         </tr>
-                        <tr class="schedule-view"></tr>
                     </table>
                 </div>
             </div>
@@ -53,11 +52,11 @@
     
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
+                <div class="panel">
+                    <div class="panel-heading" id="add-train">
                         <h3 class="panel-title">Add Train</h3>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" id="body">
                         <div class="input-group">
                             <p>Train Name</p>
                             <input type="text" class="form-control" aria-describedby="sizing-addon1"  id="name-input">
@@ -85,8 +84,9 @@
     </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
     <script type="text/javascript" src="../train-scheduler/assets/javascript/app.js"></script>
+
 </body>
 
 </html>
