@@ -10,13 +10,16 @@ var config = {
 
 firebase.initializeApp(config);
 
+//create a variable to reference the database
 var database = firebase.database();
 
+//initial values
 var trainName = "";
 var trainDestination = "";
 var trainTime = "";
 var trainFreq = "";
 
+//function to listen to submit click to kick off funciton which collects user's input and pushes data to database
 $("#submit").on("click", function(event) {
     event.preventDefault();
 
@@ -36,6 +39,7 @@ $("#submit").on("click", function(event) {
     });
 });
 
+//function kicked off by child added to get snapshot of database
 database.ref().on("child_added", function(childSnapshot) {
     childSnapshot.val();
     console.log(childSnapshot.val().trainName);
@@ -45,62 +49,51 @@ database.ref().on("child_added", function(childSnapshot) {
     renderRows(childSnapshot.val());
 })
 
-
+//function to render rows in table using the snapshot values
 function renderRows(snap) {
     var trainRow = $("<tr>");
     var trainRowName = $("<td>").text(snap.trainName);
     var trainRowDestination = $("<td>").text(snap.trainDestination);
     var trainRowFreq = $("<td>").text(snap.trainFreq);
     var trainRowArrival = $("<td>").text(calculateArrival(snap.trainTime, snap.trainFreq));
-    console.log(trainRowArrival);
-    // var trainRowMinute = $("<td>").text();
-    trainRow.append(trainRowName, trainRowDestination, trainRowFreq, trainRowArrival);
+    var trainRowMinute = $("<td>").text(calculateMinsAway(snap.trainTime, snap.trainFreq));
+    trainRow.append(trainRowName, trainRowDestination, trainRowFreq, trainRowArrival, trainRowMinute);
     $(".table").append(trainRow);
 }
 
+//function to calculate arrival time 
 function calculateArrival(trainTime, freqMinute) {
     console.log(trainTime);
     console.log(freqMinute);
 
-    var startHHmm = trainTime.split(":")
-    startInMin = trainTime[0]*60 + trainTime[1];
-    console.log(startInMin);
+    var startTime = moment(trainTime, "HH:mm");
+    console.log(startTime);
+    console.log(startTime.hour());
+    console.log(startTime.minute());
+    startTimeInMin = startTime.hour()*60 + startTime.minute();
+    console.log(startTimeInMin);
 
-    var now = moment().format("HH:mm");
-    console.log(now);
-    var nowHHmm = now.split(":")
-    console.log(nowHHmm);
-    var nowInMin = parseInt(nowHHmm[0]*60) + parseInt(nowHHmm[1]);
-    console.log(nowInMin);
-
-    var diff = nowInMin - startInMin;
+    var diff = moment().diff(startTime, "minutes");
     console.log(diff);
 
     var noOfTrains = Math.ceil(diff / freqMinute);
     console.log(noOfTrains);
 
-    var minutesInDay = ((noOfTrains*freqMinute - diff) + nowInMin);
-    console.log(minutesInDay);
-
-    var hours = Math.floor(minutesInDay/60);
-    var minutes = (minutesInDay - hours*60);
-
-    if (hours < 10) {
-        hours = "0" + hours;
-    } 
-
-    if (minutes === 0) {
-        minutes = "00";
-    } else if (minutes <10) {
-        minutes = "0" + minutes;
-    }
-
-    var nextTrainTime = hours + ":" + minutes;
-    console.log(nextTrainTime);
-    return nextTrainTime;
+    var minsDiff = noOfTrains*freqMinute - diff;
+    console.log(minsDiff);
+    var resultTime = moment().add(minsDiff, "m");
+    console.log(resultTime);
+    console.log(moment(resultTime).format("HH:mm"));
+    return moment(resultTime).format("HH:mm");
 }
 
+//function to calculate the time to the next train 
+function calculateMinsAway(trainTime, freqMinute) {
+    var nextTrainTime = calculateArrival(trainTime, freqMinute);
+    nextTrainTime = moment(nextTrainTime, "HH:mm");
+    console.log(nextTrainTime);
 
-
-
-
+    var diff = moment(nextTrainTime).diff(moment(), "minutes");
+    console.log(diff);
+    return diff;
+}
