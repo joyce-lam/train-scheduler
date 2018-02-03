@@ -1,11 +1,11 @@
 // Initialize Firebase
 var config = {
-  apiKey: "AIzaSyDNZmWs1i2GxE_dqVlRmIKndDPS_7doi4g",
-  authDomain: "train-scheduler-dcd94.firebaseapp.com",
-  databaseURL: "https://train-scheduler-dcd94.firebaseio.com",
-  projectId: "train-scheduler-dcd94",
-  storageBucket: "",
-  messagingSenderId: "662175775724"
+    apiKey: "AIzaSyDNZmWs1i2GxE_dqVlRmIKndDPS_7doi4g",
+    authDomain: "train-scheduler-dcd94.firebaseapp.com",
+    databaseURL: "https://train-scheduler-dcd94.firebaseio.com",
+    projectId: "train-scheduler-dcd94",
+    storageBucket: "",
+    messagingSenderId: "662175775724"
 };
 
 firebase.initializeApp(config);
@@ -18,45 +18,50 @@ var trainTime = "";
 var trainFreq = "";
 
 $("#submit").on("click", function(event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  trainName = $("#name-input").val().trim();
-  trainDestination = $("#destination-input").val().trim();
-  trainTime = $("#time-input").val().trim();
-  trainFreq = $("#freq-input").val().trim();
+    trainName = $("#name-input").val().trim();
+    trainDestination = $("#destination-input").val().trim();
+    trainTime = $("#time-input").val().trim();
+    trainFreq = $("#freq-input").val().trim();
 
-  console.log(trainFreq);
+    console.log(trainFreq);
 
-  database.ref().push({
-    trainName: trainName,
-    trainDestination: trainDestination,
-    trainTime: trainTime,
-    trainFreq: trainFreq,
-    dateAdded: firebase.database.ServerValue.TIMESTAMP
-  });
+    database.ref().push({
+        trainName: trainName,
+        trainDestination: trainDestination,
+        trainTime: trainTime,
+        trainFreq: trainFreq,
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
+    });
 });
 
-database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added",
-  function(snapshot) {
-    var snapValue = snapshot.val();
+database.ref().on("child_added", function(childSnapshot) {
+    childSnapshot.val();
+    console.log(childSnapshot.val().trainName);
+    console.log(childSnapshot.val().trainDestination);
+    console.log(childSnapshot.val().trainTime);
+    console.log(childSnapshot.val().trainFreq);
+    renderRows(childSnapshot.val());
+})
 
- //  $(".schedule-view").empty();
 
-    var trainRowName = $("<td>").text(snapValue.trainName);
-    var trainRowDestination = $("<td>").text(snapValue.trainDestination);
-    var trainRowFreq = $("<td>").text(snapValue.trainFreq);
-    // var trainRowArrival = $("<td>").text(sv.);
+function renderRows(snap) {
+    var trainRow = $("<tr>");
+    var trainRowName = $("<td>").text(snap.trainName);
+    var trainRowDestination = $("<td>").text(snap.trainDestination);
+    var trainRowFreq = $("<td>").text(snap.trainFreq);
+    var trainRowArrival = $("<td>").text(calculateArrival(snap.trainFreq));
+    console.log(trainRowArrival);
     // var trainRowMinute = $("<td>").text();
+    trainRow.append(trainRowName, trainRowDestination, trainRowFreq, trainRowArrival);
+    $(".table").append(trainRow);
+}
 
-    $(".schedule-view").append(trainRowName, trainRowDestination, trainRowFreq);
+function calculateArrival(minute) {
+    var arrivalTime = moment().add(minute, "m");
+    console.log(arrivalTime);
+    console.log(arrivalTime._d);
 
-  })
-
-
-
-
-
-
-
-
+}
 
